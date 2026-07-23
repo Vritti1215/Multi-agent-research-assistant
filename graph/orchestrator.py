@@ -1,0 +1,74 @@
+from functools import partial
+from langgraph.graph import StateGraph, END
+
+from graph.state import ResearchState
+from agents.planner import planner_node
+from agents.search_agent import search_node
+from agents.retrieval_agent import retrieval_node
+from agents.analysis_agent import analysis_node
+from agents.citation_agent import citation_node
+from agents.report_agent import report_node
+
+
+def should_search_again(state: dict) -> str:
+    """Loop back to search if too few claims got validated, capped at
+    2 iterations so it can't loop forever on a genuinely thin topic."""
+    if len(state.get("validated_claims", [])) < 2 and state["iteration"] < 2:
+        return "search_again"
+    return "proceed"
+
+
+def build_graph(session_id: str):
+    graph = StateGraph(ResearchState)
+
+    graph.add_node("planner", planner_node)
+    graph.add_node("search", search_node)
+    graph.add_node("retrieval", partial(retrieval_node, session_id=session_id))
+    graph.add_node("analysis", analysis_node)
+    graph.add_node("citation", citation_node)
+    graph.add_node("report", report_node)
+
+    graph.set_entry_point("planner")
+    graph.add_edge("planner", "search")
+    graph.add_edge("search", "retrieval")
+    graph.add_edge("retrieval", "analysis")
+    graph.add_edge("analysis", "citation")
+
+    graph.add_conditional_edges(
+        "citation",
+        should_search_again,
+        {"search_again": "search", "proceed": "report"},
+    )
+    graph.add_edge("report", END)
+
+    return graph.compile()
+
+
+def initial_state(query: str) -> dict:
+    return {
+        "query": query,
+        "sub_questions": [],
+        "papers": [],
+        "retrieved_chunks": [],
+        "analysis": "",
+        "claims": [],
+        "validated_claims": [],
+        "final_report": "",
+        "report_path": None,
+        "iteration": 0,
+        "needs_more_search": False,
+    }
+
+
+if __name__ == "__main__":
+    # Manual end-to-end test, no FastAPI/Streamlit needed:
+    #   conda activate research-agent
+    #   python -m graph.orchestrator
+    import uuid
+    from dotenv import load_dotenv
+    load_dotenv()
+
+    session_id = str(uuid.uuid4())[:8]
+    g = build_graph(session_id)
+    result = g.invoke(initial_state("What are recent approaches to reducing hallucination in RAG systems?"))
+    print(result["final_report"])
