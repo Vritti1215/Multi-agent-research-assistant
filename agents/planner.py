@@ -4,15 +4,20 @@ from tools.llm_client import call_llm
 
 def planner_node(state: dict) -> dict:
     """Breaks the user's query into focused sub-questions the search agent
-    can run individually against ArXiv / Semantic Scholar."""
-    prompt = f"""Break this research query into 3-5 focused sub-questions
-that together cover it well from different angles (definitions, methods,
-evidence, critiques/limitations, real-world examples). Respond ONLY with
-a JSON list of strings, no preamble, no markdown fences.
+    can run individually against ArXiv / Semantic Scholar. Deep mode asks
+    for more, more varied sub-questions."""
+    deep = state.get("deep_mode", False)
+    n_range = "5-7" if deep else "3-5"
+
+    prompt = f"""Break this research query into {n_range} focused
+sub-questions that together cover it well from different angles
+(definitions, methods, evidence, critiques/limitations, real-world
+examples{", historical context, future directions" if deep else ""}).
+Respond ONLY with a JSON list of strings, no preamble, no markdown fences.
 
 Query: {state['query']}"""
 
-    text = call_llm(prompt, max_tokens=500)
+    text = call_llm(prompt, max_tokens=700 if deep else 500)
     text = text.strip("`")
     if text.startswith("json"):
         text = text[4:].strip()

@@ -20,6 +20,7 @@ class Claim(BaseModel):
 
 class ResearchState(TypedDict):
     query: str
+    deep_mode: bool
     sub_questions: List[str]
     papers: List[dict]          # serialized Paper objects
     retrieved_chunks: List[dict]

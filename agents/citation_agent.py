@@ -3,14 +3,15 @@ from tools.llm_client import call_llm
 
 
 def _extract_claims(analysis_text: str) -> list[str]:
-    prompt = f"""Extract the 5-8 most important factual claims from this
-text as a JSON list of strings (just the claim text, no citations, no
-markdown fences).
+    prompt = f"""Extract the 8-12 most important, SPECIFIC factual claims
+from this text as a JSON list of strings (just the claim text, no
+citations, no markdown fences). Prefer concrete claims (a named method,
+a finding, a number, a named limitation) over vague summary statements.
 
 TEXT:
 {analysis_text}"""
 
-    raw = call_llm(prompt, max_tokens=800).strip("`")
+    raw = call_llm(prompt, max_tokens=1000).strip("`")
     if raw.startswith("json"):
         raw = raw[4:].strip()
     try:
@@ -56,14 +57,20 @@ SOURCES:
 def citation_node(state: dict) -> dict:
     """Extracts claims from the analysis and verifies each is grounded in
     a retrieved chunk before it's allowed into the final report. This is
-    the hallucination-prevention step."""
+    the hallucination-prevention step.
+
+    Threshold is 0.5 rather than a stricter cutoff: too strict and thin
+    or off-the-beaten-path topics end up with almost nothing validated,
+    which starves the report agent and produces generic filler instead.
+    0.5 still requires a real match, just not a near-perfect one.
+    """
     claims = _extract_claims(state["analysis"])
     chunks = state["retrieved_chunks"]
 
     validated = []
     for claim in claims:
         confidence, match = _verify_claim_against_chunks(claim, chunks)
-        if confidence >= 0.6 and match:
+        if confidence >= 0.5 and match:
             validated.append({
                 "text": claim,
                 "source_paper_url": match["url"],

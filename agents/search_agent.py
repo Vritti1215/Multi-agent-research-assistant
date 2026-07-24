@@ -7,10 +7,12 @@ def search_node(state: dict) -> dict:
     all_papers = list(state.get("papers", []))  # keep results from prior loop iterations
     seen_titles = {p["title"].lower() for p in all_papers}
 
+    max_results = 12 if state.get("deep_mode") else 8
+
     for sq in state["sub_questions"]:
         for fn in (search_arxiv, search_semantic_scholar):
             try:
-                for p in fn(sq, max_results=5):
+                for p in fn(sq, max_results=max_results):
                     if p["title"].lower() not in seen_titles:
                         seen_titles.add(p["title"].lower())
                         all_papers.append(p)

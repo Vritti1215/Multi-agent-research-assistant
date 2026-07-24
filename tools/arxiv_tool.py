@@ -1,5 +1,7 @@
 import arxiv
 
+_client = arxiv.Client()
+
 
 def search_arxiv(query: str, max_results: int = 8) -> list[dict]:
     """Search ArXiv and return a list of paper dicts."""
@@ -9,7 +11,7 @@ def search_arxiv(query: str, max_results: int = 8) -> list[dict]:
         sort_by=arxiv.SortCriterion.Relevance,
     )
     results = []
-    for r in search.results():
+    for r in _client.results(search):  # arxiv >=2.0 requires Client.results(search), not search.results()
         results.append({
             "title": r.title,
             "authors": [a.name for a in r.authors],

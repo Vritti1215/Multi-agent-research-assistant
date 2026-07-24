@@ -13,6 +13,7 @@ python-dotenv
 networkx
 pyvis
 python-pptx
-weasyprint
+python-docx
+xhtml2pdf
 markdown2
 pandas

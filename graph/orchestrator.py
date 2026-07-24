@@ -11,9 +11,10 @@ from agents.report_agent import report_node
 
 
 def should_search_again(state: dict) -> str:
-    """Loop back to search if too few claims got validated, capped at
-    2 iterations so it can't loop forever on a genuinely thin topic."""
-    if len(state.get("validated_claims", [])) < 2 and state["iteration"] < 2:
+    """Loop back to search if too few claims got validated. Deep mode
+    allows one extra retry since it's meant to dig further before settling."""
+    cap = 3 if state.get("deep_mode") else 2
+    if len(state.get("validated_claims", [])) < 2 and state["iteration"] < cap:
         return "search_again"
     return "proceed"
 
@@ -44,9 +45,10 @@ def build_graph(session_id: str):
     return graph.compile()
 
 
-def initial_state(query: str) -> dict:
+def initial_state(query: str, deep_mode: bool = False) -> dict:
     return {
         "query": query,
+        "deep_mode": deep_mode,
         "sub_questions": [],
         "papers": [],
         "retrieved_chunks": [],
