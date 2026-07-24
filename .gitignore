@@ -1,0 +1,27 @@
+# Generated output files — these are created at runtime, not source code.
+# Committing them (especially pyvis HTML with inlined JS libraries) is
+# what skews GitHub's language stats toward HTML.
+outputs/
+lib/
+
+# Vector DB data — regenerated automatically when the app runs
+data/chroma_db/
+
+# Secrets — never commit your actual API keys
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Anaconda / venv
+.conda/
+venv/
+env/
+
+# OS/editor cruft
+.DS_Store
+.vscode/
+*.egg-info/
