@@ -1,3 +1,4 @@
+import time
 from tools.arxiv_tool import search_arxiv
 from tools.semantic_scholar_tool import search_semantic_scholar
 
@@ -9,7 +10,13 @@ def search_node(state: dict) -> dict:
 
     max_results = 12 if state.get("deep_mode") else 8
 
-    for sq in state["sub_questions"]:
+    for i, sq in enumerate(state["sub_questions"]):
+        if i > 0:
+            # ArXiv's API asks for ~1 request per 3s per IP. Firing every
+            # sub-question back-to-back was tripping their rate limiter
+            # (HTTP 429, sometimes escalating to a dropped connection).
+            time.sleep(3)
+
         for fn in (search_arxiv, search_semantic_scholar):
             try:
                 for p in fn(sq, max_results=max_results):

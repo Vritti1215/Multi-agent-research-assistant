@@ -31,7 +31,17 @@ def index_papers(session_id: str, papers: list[dict]):
 
 def retrieve(session_id: str, query: str, k: int = 6) -> list[dict]:
     collection = get_collection(session_id)
-    results = collection.query(query_texts=[query], n_results=k)
+
+    # Querying a completely empty collection can raise rather than return
+    # an empty result — this happens when every search source failed for
+    # this run (rate limits, network issues, etc.). Fail soft here so the
+    # rest of the pipeline can still produce a report explaining that no
+    # sources were found, instead of the whole request crashing with a 500.
+    count = collection.count()
+    if count == 0:
+        return []
+
+    results = collection.query(query_texts=[query], n_results=min(k, count))
     chunks = []
     if not results["documents"]:
         return chunks

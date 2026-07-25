@@ -1,6 +1,9 @@
 import arxiv
 
-_client = arxiv.Client()
+# delay_seconds and num_retries give the library its own internal backoff
+# on top of the spacing we add between sub-questions in search_agent.py —
+# belt and suspenders against ArXiv's rate limiting.
+_client = arxiv.Client(page_size=100, delay_seconds=3.0, num_retries=5)
 
 
 def search_arxiv(query: str, max_results: int = 8) -> list[dict]:
