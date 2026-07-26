@@ -11,6 +11,7 @@ load_dotenv()
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional
 
@@ -42,22 +43,36 @@ def run_research(req: ResearchRequest):
         raise HTTPException(400, "Query cannot be empty")
 
     session_id = str(uuid.uuid4())[:8]
-    graph = build_graph(session_id)
 
     try:
+        graph = build_graph(session_id)
         final_state = graph.invoke(initial_state(req.query, deep_mode=req.deep_mode))
+
+        papers = final_state.get("papers", [])
+        SESSIONS[session_id] = {
+            "papers": papers,
+            "query": req.query,
+            "analysis": final_state.get("analysis", ""),
+            "gaps": final_state.get("gaps", []),
+        }
+
+        return {
+            "session_id": session_id,
+            "report": final_state.get("final_report", "No report was generated."),
+            "papers": papers,  # for the paper-comparison table
+            "papers_found": len(papers),
+            "validated_claims": final_state.get("validated_claims", []),
+            "contradictions": final_state.get("contradictions", []),
+            "gaps": final_state.get("gaps", []),
+            "confidence_score": final_state.get("confidence_score", 0),
+            "confidence_breakdown": final_state.get("confidence_breakdown", {}),
+        }
+    except HTTPException:
+        raise
     except Exception as e:
+        import traceback
+        traceback.print_exc()  # full traceback in the uvicorn terminal, not just the summary
         raise HTTPException(500, f"Research pipeline failed: {e}")
-
-    SESSIONS[session_id] = {"papers": final_state["papers"], "query": req.query}
-
-    return {
-        "session_id": session_id,
-        "report": final_state["final_report"],
-        "papers": final_state["papers"],  # for the paper-comparison table
-        "papers_found": len(final_state["papers"]),
-        "validated_claims": final_state["validated_claims"],
-    }
 
 
 class KGRequest(BaseModel):
@@ -159,6 +174,59 @@ SOURCES:
     return {"answer": answer}
 
 
+class ProposalRequest(BaseModel):
+    session_id: str
+
+
+@app.post("/research-proposal")
+def research_proposal(req: ProposalRequest):
+    """On-demand, single LLM call — not run automatically on every
+    research query, to keep this free-tier friendly."""
+    if req.session_id not in SESSIONS:
+        raise HTTPException(404, "Unknown session — run a research query first.")
+
+    from agents.proposal_agent import generate_proposal
+
+    session = SESSIONS[req.session_id]
+    try:
+        proposal = generate_proposal(
+            session["query"], session.get("analysis", ""), session.get("gaps", [])
+        )
+    except Exception as e:
+        raise HTTPException(500, f"Proposal generation failed: {e}")
+
+    return {"proposal": proposal}
+
+
+class RoadmapRequest(BaseModel):
+    session_id: str
+
+
+@app.post("/research-roadmap")
+def research_roadmap(req: RoadmapRequest):
+    """On-demand, single LLM call, grounded in the same session's analysis."""
+    if req.session_id not in SESSIONS:
+        raise HTTPException(404, "Unknown session — run a research query first.")
+
+    from agents.roadmap_agent import generate_roadmap
+
+    session = SESSIONS[req.session_id]
+    try:
+        roadmap = generate_roadmap(session["query"], session.get("analysis", ""))
+    except Exception as e:
+        raise HTTPException(500, f"Roadmap generation failed: {e}")
+
+    return {"roadmap": roadmap}
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+# Serves frontend/index.html at "/" and any other static assets in that
+# folder. Mounted LAST, after every @app.get/@app.post route above — FastAPI
+# matches explicit routes first, so this only catches what nothing else
+# handled, meaning it can't accidentally shadow /research, /chat, etc.
+static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
+app.mount("/", StaticFiles(directory=static_dir, html=True), name="frontend")

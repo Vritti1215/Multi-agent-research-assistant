@@ -54,6 +54,49 @@ SOURCES:
     return conf, chunks[idx]
 
 
+def _compute_confidence_score(validated: list[dict], claims_extracted: int, papers_found: int) -> dict:
+    """Explainable confidence score, computed entirely from data already
+    in hand — deliberately NOT an LLM call, to keep this feature free.
+
+    Three factors, weighted:
+    - avg_grounding (50%): how confidently claims matched their sources
+    - coverage (30%): what fraction of extracted claims actually got grounded
+    - paper_support (20%): how many papers backed the analysis at all,
+      saturating at 8+ (more than that doesn't meaningfully add confidence)
+
+    Returns the breakdown, not just the final number, so the UI can show
+    WHY the score is what it is instead of a bare figure.
+    """
+    if not validated:
+        return {
+            "score": 0.0, "avg_grounding": 0.0, "coverage": 0.0, "paper_support": 0.0,
+            "reason": "No claims passed grounding validation, so there's nothing to base a confidence score on.",
+        }
+
+    avg_grounding = sum(c["confidence"] for c in validated) / len(validated)
+    coverage = len(validated) / max(claims_extracted, 1)
+    paper_support = min(papers_found / 8, 1.0)
+    score = round((0.5 * avg_grounding + 0.3 * coverage + 0.2 * paper_support) * 100, 1)
+
+    # Identify the weakest factor to explain what's actually holding the score back
+    factors = {"grounding strength": avg_grounding, "claim coverage": coverage, "source breadth": paper_support}
+    weakest = min(factors, key=factors.get)
+    if score >= 70:
+        reason = f"Strong overall grounding — claims consistently matched their sources, with {weakest} being the (still solid) relative weak point."
+    elif score >= 40:
+        reason = f"Moderate confidence — {weakest} is the main thing pulling the score down; more sources or a narrower query could help."
+    else:
+        reason = f"Low confidence — {weakest} is notably weak, meaning this report leans more on the model's synthesis than tightly-grounded evidence."
+
+    return {
+        "score": score,
+        "avg_grounding": round(avg_grounding * 100, 1),
+        "coverage": round(coverage * 100, 1),
+        "paper_support": round(paper_support * 100, 1),
+        "reason": reason,
+    }
+
+
 def citation_node(state: dict) -> dict:
     """Extracts claims from the analysis and verifies each is grounded in
     a retrieved chunk before it's allowed into the final report. This is
@@ -77,4 +120,10 @@ def citation_node(state: dict) -> dict:
                 "confidence": confidence,
             })
 
-    return {"validated_claims": validated}
+    breakdown = _compute_confidence_score(validated, len(claims), len(state.get("papers", [])))
+
+    return {
+        "validated_claims": validated,
+        "confidence_score": breakdown["score"],
+        "confidence_breakdown": breakdown,
+    }

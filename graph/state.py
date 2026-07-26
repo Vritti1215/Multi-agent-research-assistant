@@ -27,6 +27,10 @@ class ResearchState(TypedDict):
     analysis: str
     claims: List[dict]          # serialized Claim objects
     validated_claims: List[dict]
+    contradictions: List[dict]
+    gaps: List[str]
+    confidence_score: float
+    confidence_breakdown: dict
     final_report: str
     report_path: Optional[str]
     iteration: int               # for retry/loop tracking

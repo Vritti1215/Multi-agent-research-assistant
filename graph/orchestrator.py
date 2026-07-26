@@ -7,6 +7,7 @@ from agents.search_agent import search_node
 from agents.retrieval_agent import retrieval_node
 from agents.analysis_agent import analysis_node
 from agents.citation_agent import citation_node
+from agents.gap_contradiction_agent import gap_contradiction_node
 from agents.report_agent import report_node
 
 
@@ -27,6 +28,7 @@ def build_graph(session_id: str):
     graph.add_node("retrieval", partial(retrieval_node, session_id=session_id))
     graph.add_node("analysis", analysis_node)
     graph.add_node("citation", citation_node)
+    graph.add_node("gap_analysis", gap_contradiction_node)
     graph.add_node("report", report_node)
 
     graph.set_entry_point("planner")
@@ -35,11 +37,14 @@ def build_graph(session_id: str):
     graph.add_edge("retrieval", "analysis")
     graph.add_edge("analysis", "citation")
 
+    # gap_analysis only runs once, on the final pass — NOT inside the
+    # search-retry loop — so it doesn't add extra LLM calls on every retry.
     graph.add_conditional_edges(
         "citation",
         should_search_again,
-        {"search_again": "search", "proceed": "report"},
+        {"search_again": "search", "proceed": "gap_analysis"},
     )
+    graph.add_edge("gap_analysis", "report")
     graph.add_edge("report", END)
 
     return graph.compile()
@@ -55,6 +60,10 @@ def initial_state(query: str, deep_mode: bool = False) -> dict:
         "analysis": "",
         "claims": [],
         "validated_claims": [],
+        "contradictions": [],
+        "gaps": [],
+        "confidence_score": 0.0,
+        "confidence_breakdown": {},
         "final_report": "",
         "report_path": None,
         "iteration": 0,

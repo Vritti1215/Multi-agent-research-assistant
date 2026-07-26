@@ -2,37 +2,64 @@ from tools.llm_client import call_llm
 
 
 def report_node(state: dict) -> dict:
-    """Compiles the validated claims AND the fuller analysis into a
-    detailed Markdown report. Leaning on analysis (not just the short
-    validated-claims list) for prose keeps the report from reading as a
-    thin bullet list stitched with generic filler."""
+    """Compiles everything into a formal, publication-style literature
+    review rather than a loose summary — Abstract through References."""
     claims_block = "\n".join(
         f"- {c['text']} (Source: {c['source_paper_url']}, confidence: {c['confidence']:.2f})"
         for c in state["validated_claims"]
-    ) or "No claims passed grounding validation — rely on the analysis below, and note the limited source coverage explicitly in the report."
+    ) or "No claims passed grounding validation — rely on the analysis below, and note the limited source coverage explicitly."
 
-    prompt = f"""Write a detailed, specific research report in Markdown
-answering: {state['query']}
+    contradictions_block = "\n".join(
+        f'- "{c.get("claim_a", "")}" vs "{c.get("claim_b", "")}" — possible reason: {c.get("possible_reason", "unclear")}'
+        for c in state.get("contradictions", [])
+    ) or "None identified among the retrieved sources."
 
-Structure: Executive Summary, Key Findings, Points of Disagreement,
-Research Gaps, Conclusion, References.
+    gaps_block = "\n".join(f"- {g}" for g in state.get("gaps", [])) or "None explicitly identified."
+
+    confidence = state.get("confidence_score", 0)
+
+    prompt = f"""Write a formal literature-review-style research report in
+Markdown answering: {state['query']}
+
+Use exactly these section headers, in this order:
+## Abstract
+## Introduction
+## Background
+## Related Work / Key Findings
+## Points of Disagreement
+## Research Gaps
+## Future Directions
+## Conclusion
+## References
 
 Rules:
+- Mention the confidence score once, near the top of the Abstract (e.g.
+  "This review is grounded with an estimated confidence of X/100, based
+  on source coverage and claim-grounding strength").
 - Be concrete: name real methods, papers, and findings from the analysis
-  below. Never write filler like "there are various approaches" or
-  "research suggests multiple methods exist" without naming them.
-- Weave in the validated claims below as your most trustworthy anchors,
-  but use the fuller analysis text to add real detail and nuance around them.
-- If source coverage on some sub-topic was thin, say so explicitly in
-  Research Gaps rather than glossing over it with vague language.
-- Target at least 700 words if the material supports it — don't pad, but
-  don't truncate real content either.
-- References section: list every source cited, as [Title](url).
+  below. Never write filler like "various approaches exist" without
+  naming them.
+- "Points of Disagreement": use the CONTRADICTIONS list below as your
+  anchor. Explain each one and why it might exist.
+- "Research Gaps": use the GAPS list below as your anchor — elaborate on
+  these, don't invent unrelated ones.
+- Weave in the validated claims as your most trustworthy anchors, using
+  the fuller analysis for depth and nuance.
+- Target at least 700 words if the material supports it.
+- References: list every source cited, as [Title](url).
 
-VALIDATED CLAIMS (grounded, high-trust anchors):
+CONFIDENCE SCORE: {confidence}/100
+
+VALIDATED CLAIMS:
 {claims_block}
 
-FULL ANALYSIS (use for depth and detail, must not contradict validated claims):
+CONTRADICTIONS:
+{contradictions_block}
+
+RESEARCH GAPS:
+{gaps_block}
+
+FULL ANALYSIS (do not contradict the validated claims above):
 {state['analysis']}"""
 
     report = call_llm(prompt, max_tokens=4000)
