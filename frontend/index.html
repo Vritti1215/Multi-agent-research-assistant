@@ -29,23 +29,27 @@ body {
     margin: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg); color: var(--ink); transition: background 0.2s, color 0.2s;
 }
-.wrap { max-width: 1080px; margin: 0 auto; padding: 1.4rem 1.5rem 4rem; }
-.icon { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; vertical-align: -3px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 1.5rem 1.5rem 5rem; }
+.icon { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.8; vertical-align: -3px; flex-shrink: 0; }
+.icon-sm { width: 14px; height: 14px; }
 
-.topbar { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0 1.2rem; }
-.brand { display: flex; align-items: center; gap: 0.6rem; }
-.brand-icon { width: 34px; height: 34px; border-radius: 9px; background: var(--primary); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0 1.4rem; gap: 1rem; }
+.brand { display: flex; align-items: center; gap: 0.7rem; }
+.brand-icon { width: 36px; height: 36px; border-radius: 10px; background: var(--primary); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
 .brand-icon .icon { width: 19px; height: 19px; }
 .brand-text h1 { font-size: 1.05rem; font-weight: 700; margin: 0; }
-.brand-text p { font-size: 0.78rem; color: var(--ink-muted); margin: 0; }
-.theme-toggle {
+.brand-text p { font-size: 0.78rem; color: var(--ink-muted); margin: 0.15rem 0 0; }
+.topbar-actions { display: flex; align-items: center; gap: 0.6rem; }
+.icon-btn {
     width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--border);
     background: var(--surface); color: var(--ink-muted); display: flex; align-items: center;
-    justify-content: center; cursor: pointer; transition: all 0.15s;
+    justify-content: center; cursor: pointer; transition: all 0.15s; position: relative;
 }
-.theme-toggle:hover { color: var(--primary); border-color: var(--primary); }
+.icon-btn:hover { color: var(--primary); border-color: var(--primary); }
 
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.3rem; box-shadow: var(--shadow); margin-bottom: 1.1rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+.card:last-child { margin-bottom: 0; }
+.card h2, .card h3 { margin-top: 0; }
 
 textarea#query {
     width: 100%; min-height: 84px; resize: vertical;
@@ -53,93 +57,192 @@ textarea#query {
     padding: 0.75rem 0.9rem; font-family: inherit; font-size: 0.92rem; outline: none;
 }
 textarea#query:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
-.controls { display: flex; align-items: center; gap: 1.1rem; margin-top: 0.85rem; flex-wrap: wrap; }
+.controls { display: flex; align-items: center; gap: 1.2rem; margin-top: 1rem; flex-wrap: wrap; }
 
 .btn {
     font-family: inherit; font-weight: 600; font-size: 0.85rem;
     border-radius: 8px; border: 1px solid var(--border);
-    padding: 0.55rem 1.15rem; cursor: pointer; background: var(--surface); color: var(--ink);
-    transition: all 0.15s ease; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.6rem 1.2rem; cursor: pointer; background: var(--surface); color: var(--ink);
+    transition: all 0.15s ease; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.45rem;
 }
 .btn:hover { border-color: var(--primary); color: var(--primary); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; }
 .btn-primary:hover { filter: brightness(1.08); color: #fff; }
-.btn-outline { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-ink); font-size: 0.8rem; padding: 0.42rem 1rem; }
+.btn-outline { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-ink); font-size: 0.8rem; padding: 0.45rem 1rem; }
+.btn-row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+.link-btn { background: none; border: none; color: var(--primary); font-family: inherit; font-size: 0.83rem; font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline; }
 
-.toggle-wrap { display: flex; align-items: center; gap: 0.55rem; font-size: 0.85rem; color: var(--ink-muted); cursor: pointer; user-select: none; }
+.toggle-wrap { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: var(--ink-muted); cursor: pointer; user-select: none; }
 .toggle { position: relative; width: 40px; height: 22px; background: var(--border); border-radius: 999px; transition: background 0.2s; flex-shrink: 0; }
 .toggle::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: transform 0.2s; }
 .toggle-wrap input { display: none; }
 .toggle-wrap input:checked + .toggle { background: var(--primary); }
 .toggle-wrap input:checked + .toggle::after { transform: translateX(18px); }
 
-#loading { display: none; align-items: center; gap: 0.65rem; padding-top: 0.9rem; color: var(--ink-muted); font-size: 0.87rem; }
+#loading { display: none; align-items: center; gap: 0.65rem; padding-top: 1rem; color: var(--ink-muted); font-size: 0.87rem; }
 .spinner { width: 17px; height: 17px; border: 2.5px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-#toast { position: fixed; bottom: 22px; right: 22px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
+#toast { position: fixed; bottom: 22px; left: 22px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
 .toast-item { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--danger); border-radius: 8px; padding: 0.75rem 1rem; box-shadow: 0 8px 24px -6px rgba(0,0,0,0.25); font-size: 0.83rem; max-width: 340px; color: var(--ink); animation: slideIn 0.2s ease; }
-@keyframes slideIn { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideIn { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
 
-#kpis { display: none; grid-template-columns: repeat(4, 1fr); gap: 0.9rem; margin-bottom: 0.6rem; }
-.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.1rem; box-shadow: var(--shadow); border-left: 3px solid var(--kpi-c, var(--primary)); }
-.kpi-top { display: flex; align-items: center; gap: 0.5rem; color: var(--ink-muted); font-size: 0.76rem; font-weight: 600; margin-bottom: 0.5rem; }
+.domain-badge { display: none; align-items: center; gap: 0.4rem; font-size: 0.78rem; font-weight: 600; color: var(--primary-ink); background: var(--primary-soft); border-radius: 999px; padding: 0.35rem 0.85rem; margin-bottom: 1.1rem; width: fit-content; }
+
+#kpis { display: none; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 0.7rem; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.05rem 1.15rem; box-shadow: var(--shadow); border-left: 3px solid var(--kpi-c, var(--primary)); }
+.kpi-top { display: flex; align-items: center; gap: 0.5rem; color: var(--ink-muted); font-size: 0.76rem; font-weight: 600; margin-bottom: 0.55rem; }
 .kpi-top .icon { color: var(--kpi-c, var(--primary)); width: 15px; height: 15px; }
 .kpi-value { font-size: 1.55rem; font-weight: 700; }
-#kpi-caption { font-size: 0.78rem; color: var(--ink-muted); margin: 0.6rem 0 1.3rem; display: none; }
+#kpi-caption { font-size: 0.78rem; color: var(--ink-muted); margin: 0.7rem 0 1.4rem; display: none; }
 
-.conf-panel { display: none; margin-bottom: 1.1rem; }
-.conf-reason { font-size: 0.86rem; color: var(--ink); background: var(--surface-2); border-radius: 8px; padding: 0.7rem 0.9rem; margin-bottom: 0.9rem; }
-.conf-bar-row { margin-bottom: 0.7rem; }
-.conf-bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 0.3rem; }
+.conf-panel { display: none; }
+.conf-reason { font-size: 0.86rem; color: var(--ink); background: var(--surface-2); border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 1rem; }
+.conf-bar-row { margin-bottom: 0.8rem; }
+.conf-bar-row:last-child { margin-bottom: 0; }
+.conf-bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 0.35rem; }
 .conf-bar-track { height: 7px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
 .conf-bar-fill { height: 100%; background: var(--primary); border-radius: 999px; transition: width 0.4s ease; }
 
-#tabs-nav { display: none; gap: 1.4rem; border-bottom: 1px solid var(--border); margin-bottom: 1.2rem; flex-wrap: wrap; }
-.tab-btn { font-family: inherit; font-size: 0.84rem; font-weight: 600; color: var(--ink-muted); background: transparent; border: none; padding: 0.6rem 0.1rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s; }
+#tabs-nav { display: none; gap: 1.4rem; border-bottom: 1px solid var(--border); margin-bottom: 1.3rem; flex-wrap: wrap; row-gap: 0.5rem; }
+.tab-btn { font-family: inherit; font-size: 0.83rem; font-weight: 600; color: var(--ink-muted); background: transparent; border: none; padding: 0.65rem 0.1rem; cursor: pointer; display: flex; align-items: center; gap: 0.4rem; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color 0.15s; }
 .tab-btn:hover { color: var(--ink); }
 .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; animation: fadeIn 0.15s ease; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.claim-item, .contra-item { border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 0.65rem; font-size: 0.88rem; background: var(--surface); }
-.claim-source { color: var(--ink-muted); font-size: 0.78rem; margin-top: 0.3rem; }
-.claim-source a { color: var(--primary); }
-.gap-item { display: flex; gap: 0.6rem; padding: 0.55rem 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
-.gap-item .icon { color: var(--warning); flex-shrink: 0; margin-top: 2px; }
-.empty-state { color: var(--ink-muted); font-size: 0.87rem; padding: 1.4rem; text-align: center; }
+.panel-caption { font-size: 0.84rem; color: var(--ink-muted); background: var(--surface-2); border-radius: 8px; padding: 0.8rem 1rem; margin-bottom: 1.1rem; line-height: 1.55; }
+.panel-actions { margin-bottom: 1.1rem; }
+.panel-actions:last-child { margin-bottom: 0; }
 
-table.papers-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
-table.papers-table th { text-align: left; color: var(--ink-muted); font-weight: 600; padding: 0.55rem 0.65rem; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
+.claim-item, .contra-item { border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1.05rem; margin-bottom: 0.7rem; font-size: 0.88rem; background: var(--surface); }
+.claim-item:last-child, .contra-item:last-child { margin-bottom: 0; }
+.claim-source { display: flex; align-items: center; gap: 0.4rem; color: var(--ink-muted); font-size: 0.78rem; margin-top: 0.5rem; }
+.claim-source a { color: var(--primary); display: inline-flex; align-items: center; gap: 0.3rem; text-decoration: none; }
+.claim-source a:hover { text-decoration: underline; }
+.gap-item { display: flex; gap: 0.65rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+.gap-item:last-child { border-bottom: none; }
+.gap-item .icon { color: var(--warning); margin-top: 2px; }
+.empty-state { color: var(--ink-muted); font-size: 0.87rem; padding: 1.6rem; text-align: center; }
+
+table.papers-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+table.papers-table th { text-align: left; color: var(--ink-muted); font-weight: 600; padding: 0.6rem 0.65rem; border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; white-space: nowrap; }
 table.papers-table th:hover { color: var(--primary); }
-table.papers-table td { padding: 0.6rem 0.65rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.papers-table td { padding: 0.65rem 0.65rem; border-bottom: 1px solid var(--border); vertical-align: top; }
 table.papers-table tr.paper-row { cursor: pointer; }
 table.papers-table tr.paper-row:hover { background: var(--surface-2); }
-.paper-abstract-row td { background: var(--surface-2); font-size: 0.82rem; color: var(--ink-muted); padding: 0.8rem 1rem; display: none; }
-.paper-abstract-row.open td { display: table-cell; }
-.source-badge { font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.55rem; border-radius: 999px; }
+.paper-abstract-row td { background: var(--surface-2); font-size: 0.82rem; color: var(--ink-muted); padding: 0; display: none; }
+.paper-abstract-row.open td { display: table-cell; padding: 1rem 1.1rem; }
+.paper-abstract-text { margin-bottom: 0.8rem; }
+.source-badge { font-size: 0.7rem; font-weight: 600; padding: 0.18rem 0.55rem; border-radius: 999px; white-space: nowrap; }
 .source-badge.arxiv { background: var(--primary-soft); color: var(--primary-ink); }
 .source-badge.semantic_scholar { background: var(--success-soft); color: var(--success); }
+.source-badge.openalex { background: var(--warning-soft); color: var(--warning); }
+.source-badge.crossref { background: var(--danger-soft); color: var(--danger); }
+.row-actions { display: flex; gap: 0.9rem; }
+.row-action { color: var(--primary); display: inline-flex; align-items: center; gap: 0.3rem; text-decoration: none; font-weight: 600; font-size: 0.8rem; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
+.row-action:hover { text-decoration: underline; }
+.paper-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary); }
+.comparison-box { background: var(--surface-2); border-radius: 10px; padding: 1.2rem; margin-bottom: 1.1rem; font-size: 0.9rem; line-height: 1.65; }
+.comparison-box h2 { font-size: 1.05rem; margin-top: 1.1rem; }
+.comparison-box h2:first-child { margin-top: 0; }
+.chat-scope-chip { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--primary-soft); color: var(--primary-ink); border-radius: 999px; padding: 0.4rem 0.8rem; font-size: 0.78rem; font-weight: 600; margin: 0 1rem 0.8rem; }
+.chat-scope-chip button { background: none; border: none; color: inherit; cursor: pointer; font-weight: 700; padding: 0; }
+.annotation-box { margin-top: 0.6rem; }
+.annotation-box textarea {
+    width: 100%; min-height: 60px; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg); color: var(--ink); padding: 0.5rem 0.7rem; font-family: inherit;
+    font-size: 0.82rem; outline: none;
+}
+.annotation-box textarea:focus { border-color: var(--primary); }
 
-#report-content, #proposal-content, #roadmap-content { font-size: 0.9rem; line-height: 1.65; }
-#report-content h2, #proposal-content h2, #roadmap-content h2 { font-size: 1.2rem; margin-top: 1.5rem; }
-#report-content h3, #proposal-content h3, #roadmap-content h3 { font-size: 1rem; }
-#report-content a, #proposal-content a, #roadmap-content a { color: var(--primary); }
+#report-content, #proposal-content, #roadmap-content, #experiment-content, #review-content, #repro-content { font-size: 0.9rem; line-height: 1.7; }
+#report-content h2, #proposal-content h2, #roadmap-content h2, #experiment-content h2, #review-content h2, #repro-content h2 { font-size: 1.2rem; margin-top: 1.6rem; }
+#report-content h2:first-child, #proposal-content h2:first-child, #roadmap-content h2:first-child, #experiment-content h2:first-child, #review-content h2:first-child, #repro-content h2:first-child { margin-top: 0; }
+#report-content h3, #proposal-content h3, #roadmap-content h3, #experiment-content h3, #review-content h3, #repro-content h3 { font-size: 1rem; }
+#report-content a, #proposal-content a, #roadmap-content a, #experiment-content a, #review-content a, #repro-content a { color: var(--primary); }
+.export-block { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+.export-label { margin-bottom: 0.7rem; }
 
-#kg-frame { width: 100%; height: 560px; border: 1px solid var(--border); border-radius: 10px; display: none; }
+#kg-frame { width: 100%; height: 560px; border: 1px solid var(--border); border-radius: 10px; display: none; margin-top: 1rem; }
 
-#chat-box { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); padding: 1rem; max-height: 320px; overflow-y: auto; margin-bottom: 0.8rem; }
-.msg { border-radius: 10px; padding: 0.6rem 0.85rem; margin-bottom: 0.55rem; font-size: 0.86rem; max-width: 85%; }
-.msg.user { background: var(--primary-soft); color: var(--ink); margin-left: auto; }
+.eval-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.3rem; }
+.eval-stat { background: var(--surface-2); border-radius: 10px; padding: 1rem 1.1rem; }
+.eval-stat-label { font-size: 0.76rem; color: var(--ink-muted); font-weight: 600; margin-bottom: 0.35rem; }
+.eval-stat-value { font-size: 1.3rem; font-weight: 700; }
+.eval-source-row { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.6rem; font-size: 0.85rem; }
+.eval-source-row:last-child { margin-bottom: 0; }
+.eval-source-bar-track { flex: 1; height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+.eval-source-bar-fill { height: 100%; border-radius: 999px; }
+.eval-section-label { font-weight: 600; margin-bottom: 0.7rem; font-size: 0.88rem; }
+
+#notes-area {
+    width: 100%; min-height: 120px; resize: vertical; border: 1px solid var(--border);
+    border-radius: 8px; background: var(--bg); color: var(--ink); padding: 0.8rem 0.95rem;
+    font-family: inherit; font-size: 0.87rem; outline: none;
+}
+#notes-area:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+#notes-status { font-size: 0.76rem; color: var(--ink-muted); margin-top: 0.5rem; }
+
+.new-papers-banner { background: var(--success-soft); border: 1px solid var(--success); border-radius: 8px; padding: 0.75rem 0.95rem; font-size: 0.85rem; margin-bottom: 1.1rem; }
+
+.section-title { font-size: 1rem; font-weight: 700; margin: 0 0 1rem; display: flex; align-items: center; gap: 0.55rem; }
+.muted { color: var(--ink-muted); font-size: 0.84rem; }
+
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: center; justify-content: center; padding: 2rem; }
+.modal-overlay.open { display: flex; }
+.modal-box { background: var(--surface); border-radius: 12px; width: 100%; max-width: 900px; height: 85vh; display: flex; flex-direction: column; overflow: hidden; }
+.modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.3rem; border-bottom: 1px solid var(--border); }
+.modal-header h3 { margin: 0; font-size: 0.95rem; }
+.modal-body { flex: 1; }
+.modal-body iframe { width: 100%; height: 100%; border: none; }
+
+.history-panel { display: none; position: fixed; top: 0; right: 0; width: 340px; height: 100vh; background: var(--surface); border-left: 1px solid var(--border); z-index: 950; padding: 1.3rem; overflow-y: auto; box-shadow: -8px 0 24px -8px rgba(0,0,0,0.15); }
+.history-panel.open { display: block; }
+.history-item { border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem 0.95rem; margin-bottom: 0.7rem; cursor: pointer; transition: border-color 0.15s; }
+.history-item:hover { border-color: var(--primary); }
+.history-item-query { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.3rem; }
+.history-item-meta { font-size: 0.75rem; color: var(--ink-muted); }
+
+#chat-bubble {
+    position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%;
+    background: var(--primary); color: #fff; display: none; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 8px 20px -4px rgba(79,70,229,0.5); z-index: 960; border: none;
+}
+#chat-bubble.visible { display: flex; }
+#chat-bubble .icon { width: 24px; height: 24px; }
+#chat-widget {
+    position: fixed; bottom: 92px; right: 24px; width: 380px; max-width: calc(100vw - 48px);
+    height: 500px; max-height: calc(100vh - 140px); background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; box-shadow: 0 16px 40px -8px rgba(0,0,0,0.25); z-index: 960;
+    display: none; flex-direction: column; overflow: hidden;
+}
+#chat-widget.open { display: flex; }
+.chat-widget-header { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.1rem; border-bottom: 1px solid var(--border); }
+.chat-widget-title { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+#chat-box { flex: 1; overflow-y: auto; padding: 1rem; }
+.msg-row { display: flex; gap: 0.55rem; margin-bottom: 0.85rem; align-items: flex-start; }
+.msg-row:last-child { margin-bottom: 0; }
+.msg-row.user { flex-direction: row-reverse; }
+.avatar { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.avatar.user { background: var(--primary); color: #fff; }
+.avatar.assistant { background: var(--surface-2); color: var(--ink-muted); border: 1px solid var(--border); }
+.msg { border-radius: 12px; padding: 0.6rem 0.85rem; font-size: 0.86rem; max-width: 78%; line-height: 1.55; }
+.msg.user { background: var(--primary-soft); color: var(--ink); }
 .msg.assistant { background: var(--surface-2); }
-#chat-input-row { display: flex; gap: 0.55rem; }
+.msg p:first-child { margin-top: 0; }
+.msg p:last-child { margin-bottom: 0; }
+.typing-dots { display: inline-flex; gap: 3px; align-items: center; padding: 0.2rem 0; }
+.typing-dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-muted); animation: bounce 1.2s infinite; }
+.typing-dots span:nth-child(2) { animation-delay: 0.15s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-4px); opacity: 1; } }
+#chat-input-row { display: flex; gap: 0.55rem; padding: 0.9rem; border-top: 1px solid var(--border); }
 #chat-input { flex: 1; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--ink); padding: 0.6rem 0.9rem; font-family: inherit; font-size: 0.86rem; outline: none; }
 #chat-input:focus { border-color: var(--primary); }
-
-.section-title { font-size: 1rem; font-weight: 700; margin: 0 0 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
-.muted { color: var(--ink-muted); font-size: 0.84rem; }
+.chat-empty-hint { text-align: center; color: var(--ink-muted); font-size: 0.83rem; padding: 2rem 1rem; }
 </style>
 </head>
 <body>
@@ -152,12 +255,20 @@ table.papers-table tr.paper-row:hover { background: var(--surface-2); }
             </div>
             <div class="brand-text">
                 <h1>Multi-Agent Research Assistant</h1>
-                <p>RAG over ArXiv &amp; Semantic Scholar &middot; citation-grounded reports</p>
+                <p>RAG over ArXiv, Semantic Scholar, OpenAlex &amp; CrossRef</p>
             </div>
         </div>
-        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode">
-            <svg class="icon" id="theme-icon" viewBox="0 0 24 24"></svg>
-        </button>
+        <div class="topbar-actions">
+            <button class="icon-btn" onclick="shareSession()" title="Share with a teammate" id="share-btn" style="display:none;">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+            </button>
+            <button class="icon-btn" onclick="toggleHistory()" title="Research history">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>
+            </button>
+            <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle light/dark mode">
+                <svg class="icon" id="theme-icon" viewBox="0 0 24 24"></svg>
+            </button>
+        </div>
     </div>
 
     <div class="card">
@@ -174,6 +285,11 @@ table.papers-table tr.paper-row:hover { background: var(--surface-2); }
             </label>
         </div>
         <div id="loading"><div class="spinner"></div><span id="loading-text">Agents are planning, searching, and analyzing...</span></div>
+    </div>
+
+    <div class="domain-badge" id="domain-badge">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        <span id="domain-text">General</span>
     </div>
 
     <div id="kpis">
@@ -222,57 +338,182 @@ table.papers-table tr.paper-row:hover { background: var(--surface-2); }
         <button class="tab-btn" data-tab="kg"><svg class="icon" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>Graph</button>
         <button class="tab-btn" data-tab="proposal"><svg class="icon" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>Proposal</button>
         <button class="tab-btn" data-tab="roadmap"><svg class="icon" viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4z"/><path d="M8 2v16M16 6v16"/></svg>Roadmap</button>
+        <button class="tab-btn" data-tab="experiment"><svg class="icon" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6.5L4.5 19a1 1 0 0 0 1 1.5h13a1 1 0 0 0 1-1.5L14 9.5V3"/></svg>Experiment</button>
+        <button class="tab-btn" data-tab="review"><svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Peer Review</button>
+        <button class="tab-btn" data-tab="repro"><svg class="icon" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>Reproducibility</button>
+        <button class="tab-btn" data-tab="dashboard"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</button>
     </div>
 
     <div id="results-area" style="display:none;">
         <div class="card tab-panel active" id="panel-report">
             <div id="report-content"></div>
-            <div style="margin-top:1.3rem; padding-top:1.1rem; border-top:1px solid var(--border);">
-                <div class="muted" style="margin-bottom:0.6rem;">Export report</div>
-                <button class="btn btn-outline" onclick="exportDoc('report','pdf')">PDF</button>
-                <button class="btn btn-outline" onclick="exportDoc('report','pptx')">PPTX</button>
-                <button class="btn btn-outline" onclick="exportDoc('report','docx')">DOCX</button>
+            <div class="export-block">
+                <div class="muted export-label">Export report</div>
+                <div class="btn-row">
+                    <button class="btn btn-outline" onclick="exportDoc('report','pdf')">PDF</button>
+                    <button class="btn btn-outline" onclick="exportDoc('report','pptx')">PPTX</button>
+                    <button class="btn btn-outline" onclick="exportDoc('report','docx')">DOCX</button>
+                </div>
             </div>
         </div>
 
-        <div class="card tab-panel" id="panel-claims"><div id="claims-content"></div></div>
-        <div class="card tab-panel" id="panel-contra"><div id="contra-content"></div></div>
-        <div class="card tab-panel" id="panel-gaps"><div id="gaps-content"></div></div>
-        <div class="card tab-panel" id="panel-papers"><div id="papers-content"></div></div>
+        <div class="card tab-panel" id="panel-claims">
+            <div class="panel-caption">Each claim here was extracted from the analysis, then checked against the actual retrieved paper text — only claims that matched a real source with reasonable confidence show up. Source links open the PDF where available.</div>
+            <div id="claims-content"></div>
+        </div>
+
+        <div class="card tab-panel" id="panel-contra">
+            <div class="panel-caption">This looks for places where the retrieved papers disagree — different findings, conflicting numbers, or tension between conclusions. An empty list is a real result, not a bug: it means the sources found for this query didn't conflict. Try a broader or more contested topic (e.g. comparing two competing techniques) to see this populated.</div>
+            <div id="contra-content"></div>
+        </div>
+
+        <div class="card tab-panel" id="panel-gaps">
+            <div class="panel-caption">Research gaps are specific things the retrieved papers collectively do NOT cover, test, or agree on — not just "more research is needed," but a concrete missing piece. These are what the Research Proposal and Experiment Design tabs build on.</div>
+            <div id="gaps-content"></div>
+        </div>
+
+        <div class="card tab-panel" id="panel-papers">
+            <div class="panel-actions btn-row">
+                <button class="btn btn-outline" onclick="checkNewPapers()" id="new-papers-btn">Check for new papers</button>
+                <span class="muted">Re-runs the same searches now and shows anything new since your last check.</span>
+            </div>
+            <div id="new-papers-banner"></div>
+            <div class="panel-actions btn-row" id="compare-bar" style="display:none;">
+                <button class="btn btn-primary" onclick="comparePapers()" id="compare-btn">Compare selected (<span id="compare-count">0</span>)</button>
+                <button class="link-btn" onclick="clearSelection()">Clear selection</button>
+            </div>
+            <div id="comparison-result"></div>
+            <div id="papers-content"></div>
+        </div>
 
         <div class="card tab-panel" id="panel-kg">
-            <button class="btn btn-primary" onclick="buildGraph()" id="kg-btn">Build knowledge graph</button>
+            <div id="kg-generate-row" class="panel-actions">
+                <button class="btn btn-primary" onclick="buildGraph()" id="kg-btn">Build knowledge graph</button>
+            </div>
+            <div id="kg-regen-row" class="panel-actions" style="display:none;">
+                <button class="link-btn" onclick="buildGraph()">Regenerate graph</button>
+            </div>
             <div id="kg-empty" class="empty-state" style="display:none;">No papers were found for this query, so there's nothing to graph.</div>
             <iframe id="kg-frame"></iframe>
         </div>
 
         <div class="card tab-panel" id="panel-proposal">
             <p class="muted">Generates a formal, detailed proposal targeting one of the research gaps found above.</p>
-            <button class="btn btn-primary" onclick="generateProposal()" id="proposal-btn">Generate research proposal</button>
-            <div id="proposal-content" style="margin-top:1rem;"></div>
-            <div id="proposal-export" style="display:none; margin-top:1.3rem; padding-top:1.1rem; border-top:1px solid var(--border);">
-                <div class="muted" style="margin-bottom:0.6rem;">Export proposal</div>
-                <button class="btn btn-outline" onclick="exportDoc('proposal','pdf')">PDF</button>
-                <button class="btn btn-outline" onclick="exportDoc('proposal','pptx')">PPTX</button>
-                <button class="btn btn-outline" onclick="exportDoc('proposal','docx')">DOCX</button>
+            <div id="proposal-generate-row" class="panel-actions">
+                <button class="btn btn-primary" onclick="generateProposal()" id="proposal-btn">Generate research proposal</button>
+            </div>
+            <div id="proposal-content"></div>
+            <div id="proposal-export" class="export-block" style="display:none;">
+                <button class="link-btn" onclick="generateProposal()" style="display:block; margin-bottom:1rem;">Regenerate proposal</button>
+                <div class="muted export-label">Export proposal</div>
+                <div class="btn-row">
+                    <button class="btn btn-outline" onclick="exportDoc('proposal','pdf')">PDF</button>
+                    <button class="btn btn-outline" onclick="exportDoc('proposal','pptx')">PPTX</button>
+                    <button class="btn btn-outline" onclick="exportDoc('proposal','docx')">DOCX</button>
+                </div>
             </div>
         </div>
 
         <div class="card tab-panel" id="panel-roadmap">
             <p class="muted">A phased learning roadmap for this topic, grounded in what the research actually found.</p>
-            <button class="btn btn-primary" onclick="generateRoadmap()" id="roadmap-btn">Generate roadmap</button>
-            <div id="roadmap-content" style="margin-top:1rem;"></div>
+            <div id="roadmap-generate-row" class="panel-actions">
+                <button class="btn btn-primary" onclick="generateRoadmap()" id="roadmap-btn">Generate roadmap</button>
+            </div>
+            <div id="roadmap-regen-row" class="panel-actions" style="display:none;">
+                <button class="link-btn" onclick="generateRoadmap()">Regenerate roadmap</button>
+            </div>
+            <div id="roadmap-content"></div>
+        </div>
+
+        <div class="card tab-panel" id="panel-experiment">
+            <p class="muted">Proposes a concrete ML experiment: dataset, training settings, evaluation metrics, baselines, ablations, and hardware requirements.</p>
+            <div id="experiment-generate-row" class="panel-actions">
+                <button class="btn btn-primary" onclick="generateExperiment()" id="experiment-btn">Design experiment</button>
+            </div>
+            <div id="experiment-regen-row" class="panel-actions" style="display:none;">
+                <button class="link-btn" onclick="generateExperiment()">Regenerate experiment design</button>
+            </div>
+            <div id="experiment-content"></div>
+        </div>
+
+        <div class="card tab-panel" id="panel-review">
+            <p class="muted">A rigorous, skeptical critique of the report — weak claims, missing rigor, and a real recommendation, not a rubber stamp.</p>
+            <div id="review-generate-row" class="panel-actions">
+                <button class="btn btn-primary" onclick="generatePeerReview()" id="review-btn">Run peer review</button>
+            </div>
+            <div id="review-regen-row" class="panel-actions" style="display:none;">
+                <button class="link-btn" onclick="generatePeerReview()">Re-review</button>
+            </div>
+            <div id="review-content"></div>
+        </div>
+
+        <div class="card tab-panel" id="panel-repro">
+            <p class="muted">Heuristic reproducibility assessment based on abstracts and analysis — not a verified audit of actual code or data repositories.</p>
+            <div id="repro-generate-row" class="panel-actions">
+                <button class="btn btn-primary" onclick="generateReproducibility()" id="repro-btn">Check reproducibility</button>
+            </div>
+            <div id="repro-regen-row" class="panel-actions" style="display:none;">
+                <button class="link-btn" onclick="generateReproducibility()">Re-check</button>
+            </div>
+            <div id="repro-content"></div>
+        </div>
+
+        <div class="card tab-panel" id="panel-dashboard">
+            <div class="section-title"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Evaluation Dashboard</div>
+            <p class="muted" style="margin-top:-0.7rem;">Aggregated from this run's own data — no extra API calls.</p>
+            <div class="eval-grid" id="eval-stats"></div>
+            <div class="eval-section-label">Papers by source</div>
+            <div id="eval-sources"></div>
         </div>
     </div>
 
-    <div class="card" id="chat-card" style="display:none; margin-top:1.3rem;">
-        <div class="section-title"><svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Ask follow-up questions</div>
-        <p class="muted" style="margin-top:-0.5rem;">Grounded in the papers already retrieved for this query — no new search needed.</p>
-        <div id="chat-box"></div>
-        <div id="chat-input-row">
-            <input id="chat-input" placeholder="Ask something about these papers..." onkeydown="if(event.key==='Enter') sendChat()">
-            <button class="btn btn-primary" onclick="sendChat()">Send</button>
+    <div class="card" id="notes-card" style="display:none;">
+        <div class="section-title"><svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Workspace Notes</div>
+            <p class="muted" style="margin-top:-0.7rem;">Your own notes on this research — saved locally in your browser, tied to this query.</p>
+        <textarea id="notes-area" placeholder="Jot down thoughts, follow-ups, or things to verify..." oninput="saveNotes()"></textarea>
+        <div id="notes-status">Not saved yet</div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="pdf-modal">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="pdf-modal-title">Reading paper</h3>
+            <button class="icon-btn" onclick="closePdfModal()"><svg class="icon" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
         </div>
+        <div class="modal-body">
+            <iframe id="pdf-modal-frame"></iframe>
+        </div>
+    </div>
+</div>
+
+<div class="history-panel" id="history-panel">
+    <div class="section-title">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><path d="M12 7v5l4 2"/></svg>
+        Research History
+    </div>
+    <p class="muted">Past queries run in this browser. Click one to reload its results.</p>
+    <div id="history-list"></div>
+</div>
+
+<button id="chat-bubble" onclick="toggleChatWidget()">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+<div id="chat-widget">
+    <div class="chat-widget-header">
+        <div class="chat-widget-title">
+            <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            Ask about these papers
+        </div>
+        <div class="btn-row">
+            <button class="link-btn" onclick="clearChat()">Clear</button>
+            <button class="icon-btn" style="width:28px;height:28px;" onclick="toggleChatWidget()"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+        </div>
+    </div>
+    <div id="chat-box"><div class="chat-empty-hint">Run a research query, then ask follow-up questions grounded in the papers found — no new search needed.</div></div>
+    <div id="chat-input-row">
+        <input id="chat-input" placeholder="Ask something..." onkeydown="if(event.key==='Enter') sendChat()">
+        <button class="btn btn-primary" onclick="sendChat()">Send</button>
     </div>
 </div>
 
@@ -283,6 +524,11 @@ const ICONS = {
     sun: '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>',
     moon: '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
 };
+const DOWNLOAD_ICON = '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/>';
+const USER_ICON = '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>';
+const BOT_ICON = '<rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><path d="M8 16h.01M16 16h.01"/>';
+const BOOK_ICON = '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>';
+const EDIT_ICON = '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/>';
 
 function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
@@ -299,8 +545,8 @@ const API = '';
 let state = {
     sessionId: null, report: null, papers: [], validatedClaims: [],
     contradictions: [], gaps: [], confidenceScore: 0, confidenceBreakdown: {},
-    proposal: null, roadmap: null, lastQuery: '', chatHistory: [],
-    sortKey: null, sortAsc: true,
+    proposal: null, roadmap: null, experiment: null, domain: 'General',
+    lastQuery: '', sortKey: null, sortAsc: true,
 };
 
 function toast(message) {
@@ -349,10 +595,12 @@ async function runResearch() {
     document.getElementById('loading-text').textContent =
         'Agents are planning, searching, and analyzing' + (deepMode ? ' (deep mode — this takes longer)' : '') + '...';
 
-    state.chatHistory = []; document.getElementById('chat-box').innerHTML = '';
-    state.proposal = null; document.getElementById('proposal-content').innerHTML = '';
-    document.getElementById('proposal-export').style.display = 'none';
-    state.roadmap = null; document.getElementById('roadmap-content').innerHTML = '';
+    clearChat();
+    resetOnDemandPanel('proposal'); resetOnDemandPanel('roadmap'); resetOnDemandPanel('experiment');
+    resetOnDemandPanel('review'); resetOnDemandPanel('repro');
+    document.getElementById('kg-generate-row').style.display = 'block';
+    document.getElementById('kg-regen-row').style.display = 'none';
+    document.getElementById('new-papers-banner').innerHTML = '';
 
     try {
         const data = await apiCall('/research', { query, deep_mode: deepMode }, deepMode ? 400000 : 240000);
@@ -364,8 +612,10 @@ async function runResearch() {
         state.gaps = data.gaps || [];
         state.confidenceScore = data.confidence_score || 0;
         state.confidenceBreakdown = data.confidence_breakdown || {};
+        state.domain = data.domain || 'General';
         state.lastQuery = query;
         renderResults();
+        saveToHistory();
     } catch (e) {
         toast('Something went wrong: ' + e.message);
     } finally {
@@ -374,13 +624,34 @@ async function runResearch() {
     }
 }
 
+function resetOnDemandPanel(kind) {
+    const contentEl = document.getElementById(kind + '-content');
+    if (contentEl) contentEl.innerHTML = '';
+    const genRow = document.getElementById(kind + '-generate-row');
+    if (genRow) genRow.style.display = 'block';
+    const regenRow = document.getElementById(kind + '-regen-row');
+    if (regenRow) regenRow.style.display = 'none';
+    const exportRow = document.getElementById(kind + '-export');
+    if (exportRow) exportRow.style.display = 'none';
+}
+
 function renderResults() {
     document.getElementById('kpis').style.display = 'grid';
     document.getElementById('kpi-caption').style.display = 'block';
     document.getElementById('conf-panel').style.display = 'block';
     document.getElementById('tabs-nav').style.display = 'flex';
     document.getElementById('results-area').style.display = 'block';
-    document.getElementById('chat-card').style.display = 'block';
+    document.getElementById('notes-card').style.display = 'block';
+    document.getElementById('chat-bubble').classList.add('visible');
+    document.getElementById('share-btn').style.display = 'flex';
+    loadNotes();
+
+    if (state.domain && state.domain !== 'General') {
+        document.getElementById('domain-badge').style.display = 'inline-flex';
+        document.getElementById('domain-text').textContent = state.domain + ' Expert Analysis';
+    } else {
+        document.getElementById('domain-badge').style.display = 'none';
+    }
 
     document.getElementById('kpi-papers').textContent = state.papers.length;
     document.getElementById('kpi-claims').textContent = state.validatedClaims.length;
@@ -401,7 +672,7 @@ function renderResults() {
     document.getElementById('report-content').innerHTML = marked.parse(state.report || '');
 
     document.getElementById('claims-content').innerHTML = state.validatedClaims.length
-        ? state.validatedClaims.map(c => `<div class="claim-item"><strong>${escapeHtml(c.text)}</strong><div class="claim-source">source: <a href="${c.source_paper_url}" target="_blank">link</a> &middot; confidence: ${c.confidence.toFixed(2)}</div></div>`).join('')
+        ? state.validatedClaims.map(c => `<div class="claim-item"><strong>${escapeHtml(c.text)}</strong><div class="claim-source"><svg class="icon icon-sm" viewBox="0 0 24 24">${DOWNLOAD_ICON}</svg><a href="${c.pdf_url || c.source_paper_url}" target="_blank">open source</a> &middot; confidence: ${c.confidence.toFixed(2)}</div></div>`).join('')
         : '<div class="empty-state">No claims passed the grounding threshold for this query.</div>';
 
     document.getElementById('contra-content').innerHTML = state.contradictions.length
@@ -414,6 +685,7 @@ function renderResults() {
 
     state.sortKey = null;
     renderPapersTable();
+    renderEvalDashboard();
 
     document.getElementById('kg-frame').style.display = 'none';
     document.getElementById('kg-empty').style.display = 'none';
@@ -422,6 +694,12 @@ function renderResults() {
 function sortPapers(key) {
     if (state.sortKey === key) { state.sortAsc = !state.sortAsc; } else { state.sortKey = key; state.sortAsc = false; }
     renderPapersTable();
+}
+
+const SOURCE_LABELS = { arxiv: 'ArXiv', semantic_scholar: 'S2', openalex: 'OpenAlex', crossref: 'CrossRef' };
+
+function paperKey(title) {
+    return 'ra-annot-' + btoa(unescape(encodeURIComponent(title))).slice(0, 40);
 }
 
 function renderPapersTable() {
@@ -438,26 +716,70 @@ function renderPapersTable() {
 
     const rows = papers.map((p, i) => {
         const authors = p.authors.slice(0, 3).join(', ') + (p.authors.length > 3 ? ' et al.' : '');
-        const badgeClass = p.source === 'arxiv' ? 'arxiv' : 'semantic_scholar';
         const abstractText = (p.abstract || 'No abstract available.').slice(0, 500) + ((p.abstract || '').length > 500 ? '...' : '');
+        const pdfLink = p.pdf_url || p.url;
+        const savedNote = localStorage.getItem(paperKey(p.title)) || '';
+        const checked = selectedPapers.has(p.title) ? 'checked' : '';
         return `
-        <tr class="paper-row" onclick="toggleAbstract(${i})">
-            <td>${escapeHtml(p.title)}</td>
-            <td>${escapeHtml(authors)}</td>
-            <td>${p.year || '-'}</td>
-            <td><span class="source-badge ${badgeClass}">${p.source === 'arxiv' ? 'ArXiv' : 'S2'}</span></td>
-            <td>${p.citation_count ?? '-'}</td>
+        <tr class="paper-row">
+            <td onclick="event.stopPropagation()"><input type="checkbox" class="paper-checkbox" ${checked} onchange="toggleSelection('${escapeJs(p.title)}', this.checked)"></td>
+            <td onclick="toggleAbstract(${i})">${escapeHtml(p.title)}</td>
+            <td onclick="toggleAbstract(${i})">${escapeHtml(authors)}</td>
+            <td onclick="toggleAbstract(${i})">${p.year || '-'}</td>
+            <td onclick="toggleAbstract(${i})"><span class="source-badge ${p.source}">${SOURCE_LABELS[p.source] || p.source}</span></td>
+            <td onclick="toggleAbstract(${i})">${p.citation_count ?? '-'}</td>
+            <td>
+                <div class="row-actions">
+                    <a class="row-action" href="${pdfLink}" target="_blank"><svg class="icon icon-sm" viewBox="0 0 24 24">${DOWNLOAD_ICON}</svg>Open</a>
+                    <button class="row-action" onclick="readPdf('${escapeJs(p.title)}', '${escapeJs(pdfLink)}')"><svg class="icon icon-sm" viewBox="0 0 24 24">${BOOK_ICON}</svg>Read</button>
+                    <button class="row-action" onclick="chatAboutPaper('${escapeJs(p.title)}')"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Chat</button>
+                </div>
+            </td>
         </tr>
-        <tr class="paper-abstract-row" id="abs-row-${i}"><td colspan="5">${escapeHtml(abstractText)}</td></tr>`;
+        <tr class="paper-abstract-row" id="abs-row-${i}"><td colspan="7">
+            <div class="paper-abstract-text">${escapeHtml(abstractText)}</div>
+            <div class="annotation-box">
+                <div class="muted" style="margin-bottom:0.4rem; display:flex; align-items:center; gap:0.35rem;"><svg class="icon icon-sm" viewBox="0 0 24 24">${EDIT_ICON}</svg>Your notes on this paper</div>
+                <textarea placeholder="Annotate this paper..." onclick="event.stopPropagation()" oninput="saveAnnotation('${escapeJs(p.title)}', this.value)">${escapeHtml(savedNote)}</textarea>
+            </div>
+        </td></tr>`;
     }).join('');
 
     const arrow = (key) => state.sortKey === key ? (state.sortAsc ? ' \u25B2' : ' \u25BC') : '';
     el.innerHTML = `<table class="papers-table"><thead><tr>
+        <th></th>
         <th>Title</th><th>Authors</th>
         <th onclick="sortPapers('year')">Year${arrow('year')}</th>
         <th>Source</th>
         <th onclick="sortPapers('citation_count')">Citations${arrow('citation_count')}</th>
-    </tr></thead><tbody>${rows}</tbody></table><p class="muted" style="margin-top:0.6rem;">Click a row to expand its abstract.</p>`;
+        <th>Actions</th>
+    </tr></thead><tbody>${rows}</tbody></table><p class="muted" style="margin-top:0.7rem;">Check papers to compare them, click a row to expand its abstract and add notes.</p>`;
+}
+
+let selectedPapers = new Set();
+function toggleSelection(title, checked) {
+    if (checked) selectedPapers.add(title); else selectedPapers.delete(title);
+    document.getElementById('compare-bar').style.display = selectedPapers.size >= 1 ? 'flex' : 'none';
+    document.getElementById('compare-count').textContent = selectedPapers.size;
+}
+function clearSelection() {
+    selectedPapers.clear();
+    document.getElementById('compare-bar').style.display = 'none';
+    document.getElementById('comparison-result').innerHTML = '';
+    renderPapersTable();
+}
+async function comparePapers() {
+    if (selectedPapers.size < 2) { toast('Select at least 2 papers to compare.'); return; }
+    const btn = document.getElementById('compare-btn');
+    btn.disabled = true; btn.textContent = 'Comparing...';
+    try {
+        const data = await apiCall('/compare-papers', { session_id: state.sessionId, paper_titles: [...selectedPapers] }, 90000);
+        document.getElementById('comparison-result').innerHTML = `<div class="comparison-box">${marked.parse(data.comparison)}</div>`;
+    } catch (e) {
+        toast('Comparison failed: ' + e.message);
+    } finally {
+        btn.disabled = false; btn.innerHTML = `Compare selected (<span id="compare-count">${selectedPapers.size}</span>)`;
+    }
 }
 
 function toggleAbstract(i) {
@@ -467,9 +789,25 @@ function toggleAbstract(i) {
     if (!wasOpen) row.classList.add('open');
 }
 
+function saveAnnotation(title, value) {
+    localStorage.setItem(paperKey(title), value);
+}
+
+function readPdf(title, url) {
+    document.getElementById('pdf-modal-title').textContent = title;
+    const frame = document.getElementById('pdf-modal-frame');
+    frame.src = url;
+    document.getElementById('pdf-modal').classList.add('open');
+}
+function closePdfModal() {
+    document.getElementById('pdf-modal').classList.remove('open');
+    document.getElementById('pdf-modal-frame').src = '';
+}
+
 async function buildGraph() {
     const btn = document.getElementById('kg-btn');
-    btn.disabled = true; btn.textContent = 'Building...';
+    const wasRegen = document.getElementById('kg-regen-row').style.display !== 'none';
+    if (!wasRegen) { btn.disabled = true; btn.textContent = 'Building...'; }
     try {
         const data = await apiCall('/knowledge-graph', { query: state.lastQuery, session_id: state.sessionId }, 60000);
         if (data.papers_found === 0) {
@@ -480,6 +818,8 @@ async function buildGraph() {
             frame.src = '/download?path=' + encodeURIComponent(data.graph_path);
             frame.style.display = 'block';
             document.getElementById('kg-empty').style.display = 'none';
+            document.getElementById('kg-generate-row').style.display = 'none';
+            document.getElementById('kg-regen-row').style.display = 'block';
         }
     } catch (e) {
         toast('Something went wrong: ' + e.message);
@@ -492,10 +832,11 @@ async function generateProposal() {
     const btn = document.getElementById('proposal-btn');
     btn.disabled = true; btn.textContent = 'Drafting...';
     try {
-        const data = await apiCall('/research-proposal', { session_id: state.sessionId }, 90000);
+        const data = await apiCall('/research-proposal', { session_id: state.sessionId }, 120000);
         state.proposal = data.proposal;
         document.getElementById('proposal-content').innerHTML = marked.parse(state.proposal);
         document.getElementById('proposal-export').style.display = 'block';
+        document.getElementById('proposal-generate-row').style.display = 'none';
     } catch (e) {
         toast('Something went wrong: ' + e.message);
     } finally {
@@ -505,16 +846,118 @@ async function generateProposal() {
 
 async function generateRoadmap() {
     const btn = document.getElementById('roadmap-btn');
-    btn.disabled = true; btn.textContent = 'Building roadmap...';
+    const wasRegen = document.getElementById('roadmap-regen-row').style.display !== 'none';
+    if (!wasRegen) { btn.disabled = true; btn.textContent = 'Building roadmap...'; }
     try {
-        const data = await apiCall('/research-roadmap', { session_id: state.sessionId }, 90000);
+        const data = await apiCall('/research-roadmap', { session_id: state.sessionId }, 120000);
         state.roadmap = data.roadmap;
         document.getElementById('roadmap-content').innerHTML = marked.parse(state.roadmap);
+        document.getElementById('roadmap-generate-row').style.display = 'none';
+        document.getElementById('roadmap-regen-row').style.display = 'block';
     } catch (e) {
         toast('Something went wrong: ' + e.message);
     } finally {
         btn.disabled = false; btn.textContent = 'Generate roadmap';
     }
+}
+
+async function generateExperiment() {
+    const btn = document.getElementById('experiment-btn');
+    const wasRegen = document.getElementById('experiment-regen-row').style.display !== 'none';
+    if (!wasRegen) { btn.disabled = true; btn.textContent = 'Designing...'; }
+    try {
+        const data = await apiCall('/experiment-design', { session_id: state.sessionId }, 120000);
+        state.experiment = data.experiment_design;
+        document.getElementById('experiment-content').innerHTML = marked.parse(state.experiment);
+        document.getElementById('experiment-generate-row').style.display = 'none';
+        document.getElementById('experiment-regen-row').style.display = 'block';
+    } catch (e) {
+        toast('Something went wrong: ' + e.message);
+    } finally {
+        btn.disabled = false; btn.textContent = 'Design experiment';
+    }
+}
+
+async function generatePeerReview() {
+    const btn = document.getElementById('review-btn');
+    const wasRegen = document.getElementById('review-regen-row').style.display !== 'none';
+    if (!wasRegen) { btn.disabled = true; btn.textContent = 'Reviewing...'; }
+    try {
+        const data = await apiCall('/peer-review', { session_id: state.sessionId }, 120000);
+        document.getElementById('review-content').innerHTML = marked.parse(data.review);
+        document.getElementById('review-generate-row').style.display = 'none';
+        document.getElementById('review-regen-row').style.display = 'block';
+    } catch (e) {
+        toast('Something went wrong: ' + e.message);
+    } finally {
+        btn.disabled = false; btn.textContent = 'Run peer review';
+    }
+}
+
+async function generateReproducibility() {
+    const btn = document.getElementById('repro-btn');
+    const wasRegen = document.getElementById('repro-regen-row').style.display !== 'none';
+    if (!wasRegen) { btn.disabled = true; btn.textContent = 'Checking...'; }
+    try {
+        const data = await apiCall('/reproducibility-check', { session_id: state.sessionId }, 120000);
+        document.getElementById('repro-content').innerHTML = marked.parse(data.reproducibility_check);
+        document.getElementById('repro-generate-row').style.display = 'none';
+        document.getElementById('repro-regen-row').style.display = 'block';
+    } catch (e) {
+        toast('Something went wrong: ' + e.message);
+    } finally {
+        btn.disabled = false; btn.textContent = 'Check reproducibility';
+    }
+}
+
+async function checkNewPapers() {
+    const btn = document.getElementById('new-papers-btn');
+    btn.disabled = true; btn.textContent = 'Checking...';
+    try {
+        const data = await apiCall('/check-new-papers', { session_id: state.sessionId }, 90000);
+        const banner = document.getElementById('new-papers-banner');
+        if (data.new_count > 0) {
+            state.papers = state.papers.concat(data.new_papers);
+            banner.innerHTML = `<div class="new-papers-banner">Found ${data.new_count} new paper(s) since your last check — added to the table below.</div>`;
+            renderPapersTable();
+            renderEvalDashboard();
+        } else {
+            banner.innerHTML = `<div class="new-papers-banner">No new papers found since your last check.</div>`;
+        }
+    } catch (e) {
+        toast('Something went wrong: ' + e.message);
+    } finally {
+        btn.disabled = false; btn.textContent = 'Check for new papers';
+    }
+}
+
+function renderEvalDashboard() {
+    const totalClaims = state.validatedClaims.length;
+    const avgCitations = state.papers.length
+        ? Math.round(state.papers.reduce((s, p) => s + (p.citation_count || 0), 0) / state.papers.length)
+        : 0;
+
+    document.getElementById('eval-stats').innerHTML = `
+        <div class="eval-stat"><div class="eval-stat-label">Confidence Score</div><div class="eval-stat-value">${state.confidenceScore}/100</div></div>
+        <div class="eval-stat"><div class="eval-stat-label">Claims Grounded</div><div class="eval-stat-value">${totalClaims}</div></div>
+        <div class="eval-stat"><div class="eval-stat-label">Avg. Citations / Paper</div><div class="eval-stat-value">${avgCitations}</div></div>
+        <div class="eval-stat"><div class="eval-stat-label">Contradictions Found</div><div class="eval-stat-value">${state.contradictions.length}</div></div>
+        <div class="eval-stat"><div class="eval-stat-label">Research Gaps</div><div class="eval-stat-value">${state.gaps.length}</div></div>
+        <div class="eval-stat"><div class="eval-stat-label">Papers Considered</div><div class="eval-stat-value">${state.papers.length}</div></div>
+    `;
+
+    const sourceCounts = {};
+    state.papers.forEach(p => { sourceCounts[p.source] = (sourceCounts[p.source] || 0) + 1; });
+    const sourceColors = { arxiv: 'var(--primary)', semantic_scholar: 'var(--success)', openalex: 'var(--warning)', crossref: 'var(--danger)' };
+    const maxCount = Math.max(1, ...Object.values(sourceCounts));
+
+    document.getElementById('eval-sources').innerHTML = Object.entries(sourceCounts).map(([src, count]) => `
+        <div class="eval-source-row">
+            <span style="width:80px;">${SOURCE_LABELS[src] || src}</span>
+            <div class="eval-source-bar-track"><div class="eval-source-bar-fill" style="width:${(count / maxCount) * 100}%; background:${sourceColors[src] || 'var(--primary)'}"></div></div>
+            <span style="width:24px; text-align:right;">${count}</span>
+        </div>
+    `).join('') || '<div class="empty-state">No papers yet.</div>';
 }
 
 async function exportDoc(kind, fmt) {
@@ -531,35 +974,179 @@ async function exportDoc(kind, fmt) {
     }
 }
 
+let chatScopePaper = null;
+
+function toggleChatWidget() {
+    document.getElementById('chat-widget').classList.toggle('open');
+}
+function clearChat() {
+    chatScopePaper = null;
+    renderChatScopeChip();
+    document.getElementById('chat-box').innerHTML = '<div class="chat-empty-hint">Run a research query, then ask follow-up questions grounded in the papers found — no new search needed.</div>';
+}
+function chatAboutPaper(title) {
+    chatScopePaper = title;
+    renderChatScopeChip();
+    document.getElementById('chat-widget').classList.add('open');
+    document.getElementById('chat-input').focus();
+    toast('Chat is now scoped to: ' + (title.length > 50 ? title.slice(0, 50) + '...' : title));
+}
+function clearChatScope() {
+    chatScopePaper = null;
+    renderChatScopeChip();
+}
+function renderChatScopeChip() {
+    const existing = document.getElementById('chat-scope-chip');
+    if (existing) existing.remove();
+    if (chatScopePaper) {
+        const chip = document.createElement('div');
+        chip.id = 'chat-scope-chip';
+        chip.className = 'chat-scope-chip';
+        chip.innerHTML = `Chatting about: ${escapeHtml(chatScopePaper.length > 40 ? chatScopePaper.slice(0, 40) + '...' : chatScopePaper)} <button onclick="clearChatScope()">&times;</button>`;
+        document.getElementById('chat-box').before(chip);
+    }
+}
 async function sendChat() {
+    if (!state.sessionId) { toast('Run a research query first.'); return; }
     const input = document.getElementById('chat-input');
     const message = input.value.trim();
     if (!message) return;
     input.value = '';
-    appendChatMsg('user', message);
-    const thinkingId = appendChatMsg('assistant', 'Thinking...');
+
+    const emptyHint = document.querySelector('.chat-empty-hint');
+    if (emptyHint) emptyHint.remove();
+
+    appendChatMsg('user', escapeHtml(message));
+    const thinkingRow = appendTyping();
     try {
-        const data = await apiCall('/chat', { session_id: state.sessionId, message }, 60000);
-        updateChatMsg(thinkingId, data.answer);
+        const body = { session_id: state.sessionId, message };
+        if (chatScopePaper) body.paper_title = chatScopePaper;
+        const data = await apiCall('/chat', body, 60000);
+        replaceTypingWithAnswer(thinkingRow, data.answer);
     } catch (e) {
-        updateChatMsg(thinkingId, 'Something went wrong: ' + e.message);
+        replaceTypingWithAnswer(thinkingRow, 'Something went wrong: ' + e.message);
     }
 }
-
-let msgCounter = 0;
-function appendChatMsg(role, text) {
-    const id = 'msg-' + (msgCounter++);
+function appendChatMsg(role, htmlContent) {
     const box = document.getElementById('chat-box');
-    const div = document.createElement('div');
-    div.className = 'msg ' + role; div.id = id; div.textContent = text;
-    box.appendChild(div); box.scrollTop = box.scrollHeight;
-    return id;
+    const row = document.createElement('div');
+    row.className = 'msg-row ' + role;
+    row.innerHTML = `
+        <div class="avatar ${role}"><svg class="icon icon-sm" viewBox="0 0 24 24">${role === 'user' ? USER_ICON : BOT_ICON}</svg></div>
+        <div class="msg ${role}">${htmlContent}</div>`;
+    box.appendChild(row);
+    box.scrollTop = box.scrollHeight;
+    return row;
 }
-function updateChatMsg(id, text) { const el = document.getElementById(id); if (el) el.textContent = text; }
+function appendTyping() {
+    return appendChatMsg('assistant', '<div class="typing-dots"><span></span><span></span><span></span></div>');
+}
+function replaceTypingWithAnswer(row, answerText) {
+    const msgEl = row.querySelector('.msg');
+    msgEl.innerHTML = marked.parse(answerText || '');
+    document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
+}
+
+function notesKey() {
+    return 'ra-notes-' + btoa(unescape(encodeURIComponent(state.lastQuery))).slice(0, 40);
+}
+function saveNotes() {
+    localStorage.setItem(notesKey(), document.getElementById('notes-area').value);
+    document.getElementById('notes-status').textContent = 'Saved locally · ' + new Date().toLocaleTimeString();
+}
+function loadNotes() {
+    const saved = localStorage.getItem(notesKey());
+    document.getElementById('notes-area').value = saved || '';
+    document.getElementById('notes-status').textContent = saved ? 'Loaded from your last session on this query' : 'Not saved yet';
+}
+
+function toggleHistory() {
+    document.getElementById('history-panel').classList.toggle('open');
+    renderHistoryList();
+}
+function saveToHistory() {
+    const history = JSON.parse(localStorage.getItem('ra-history') || '[]');
+    history.unshift({
+        query: state.lastQuery,
+        timestamp: Date.now(),
+        confidence: state.confidenceScore,
+        papersFound: state.papers.length,
+        snapshot: { ...state },
+    });
+    localStorage.setItem('ra-history', JSON.stringify(history.slice(0, 20)));
+}
+function renderHistoryList() {
+    const history = JSON.parse(localStorage.getItem('ra-history') || '[]');
+    const el = document.getElementById('history-list');
+    if (!history.length) { el.innerHTML = '<div class="empty-state">No past queries yet.</div>'; return; }
+    el.innerHTML = history.map((h, i) => `
+        <div class="history-item" onclick="restoreHistory(${i})">
+            <div class="history-item-query">${escapeHtml(h.query)}</div>
+            <div class="history-item-meta">${new Date(h.timestamp).toLocaleString()} &middot; ${h.papersFound} papers &middot; confidence ${h.confidence}/100</div>
+        </div>
+    `).join('');
+}
+function restoreHistory(i) {
+    const history = JSON.parse(localStorage.getItem('ra-history') || '[]');
+    const entry = history[i];
+    if (!entry) return;
+    state = { ...entry.snapshot };
+    document.getElementById('query').value = state.lastQuery;
+    renderResults();
+    toggleHistory();
+    toast('Restored from history. Chat and on-demand tabs need the original backend session — re-run if those fail.');
+}
 
 function escapeHtml(str) {
     const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
 }
+function escapeJs(str) {
+    return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
+/* ---- Share with a teammate ---- */
+function shareSession() {
+    if (!state.sessionId) { toast('Run a research query first.'); return; }
+    const url = `${window.location.origin}${window.location.pathname}?share=${state.sessionId}`;
+    navigator.clipboard.writeText(url).then(() => {
+        toast('Share link copied! Note: it only works while this backend keeps running (sessions are in-memory, not a database).');
+    }).catch(() => {
+        toast('Could not copy automatically — here it is: ' + url);
+    });
+}
+
+async function loadSharedSessionIfPresent() {
+    const params = new URLSearchParams(window.location.search);
+    const sharedId = params.get('share');
+    if (!sharedId) return;
+
+    try {
+        const res = await fetch('/session/' + sharedId);
+        if (!res.ok) {
+            const body = await res.json().catch(() => ({}));
+            throw new Error(body.detail || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+
+        state.sessionId = data.session_id;
+        state.report = data.report;
+        state.papers = data.papers;
+        state.validatedClaims = data.validated_claims;
+        state.contradictions = data.contradictions || [];
+        state.gaps = data.gaps || [];
+        state.confidenceScore = data.confidence_score || 0;
+        state.confidenceBreakdown = data.confidence_breakdown || {};
+        state.domain = data.domain || 'General';
+        state.lastQuery = data.query;
+        document.getElementById('query').value = data.query;
+        renderResults();
+        toast('Loaded a shared research session.');
+    } catch (e) {
+        toast('Could not load shared session: ' + e.message);
+    }
+}
+loadSharedSessionIfPresent();
+
 </script>
 </body>
 </html>
