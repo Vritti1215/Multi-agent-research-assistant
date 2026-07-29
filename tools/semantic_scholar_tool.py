@@ -24,7 +24,7 @@ def search_semantic_scholar(query: str, max_results: int = 8) -> list[dict]:
     params = {
         "query": query,
         "limit": max_results,
-        "fields": "title,authors,abstract,url,year,citationCount",
+        "fields": "title,authors,abstract,url,year,citationCount,openAccessPdf",
     }
 
     try:
@@ -49,11 +49,14 @@ def search_semantic_scholar(query: str, max_results: int = 8) -> list[dict]:
     for p in data:
         if not p.get("abstract"):
             continue
+        real_pdf = (p.get("openAccessPdf") or {}).get("url")
         results.append({
             "title": p["title"],
             "authors": [a["name"] for a in p.get("authors", [])],
             "abstract": p["abstract"],
             "url": p.get("url", ""),
+            "pdf_url": real_pdf or p.get("url", ""),
+            "has_pdf": bool(real_pdf),  # only True when a genuine open-access PDF exists, not the article page
             "year": p.get("year"),
             "source": "semantic_scholar",
             "citation_count": p.get("citationCount", 0),

@@ -24,6 +24,7 @@ def search_arxiv(query: str, max_results: int = 8) -> list[dict]:
             "source": "arxiv",
             "citation_count": None,
             "pdf_url": r.pdf_url,
+            "has_pdf": True,  # ArXiv always has a genuine direct PDF link
         })
     return results
 
