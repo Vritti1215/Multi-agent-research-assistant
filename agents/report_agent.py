@@ -17,6 +17,47 @@ def report_node(state: dict) -> dict:
     gaps_block = "\n".join(f"- {g}" for g in state.get("gaps", [])) or "None explicitly identified."
 
     confidence = state.get("confidence_score", 0)
+    revision_feedback = state.get("critique_feedback", "")
+    previous_report = state.get("final_report", "")
+
+    if revision_feedback and previous_report:
+        # REVISION MODE: the critique agent found the evidence adequate
+        # but the writing itself unfocused/shallow relative to the
+        # ORIGINAL question. Rewrite targeting that feedback specifically
+        # — don't regenerate blindly from scratch.
+        prompt = f"""You previously wrote the research report below in
+response to: {state['query']}
+
+A critique found this specific problem with the report (not the
+evidence — the writing itself):
+{revision_feedback}
+
+Rewrite the report to directly fix that problem, keeping the same
+Markdown section structure (Abstract, Introduction, Background, Related
+Work / Key Findings, Points of Disagreement, Research Gaps, Future
+Directions, Conclusion, References) and staying grounded in the same
+validated claims and analysis below — do not invent new claims, only
+improve focus, depth, and directness in answering the original question.
+
+CONFIDENCE SCORE: {confidence}/100
+
+VALIDATED CLAIMS:
+{claims_block}
+
+CONTRADICTIONS:
+{contradictions_block}
+
+RESEARCH GAPS:
+{gaps_block}
+
+FULL ANALYSIS (do not contradict the validated claims above):
+{state['analysis']}
+
+PREVIOUS REPORT (to revise):
+{previous_report}"""
+
+        report = call_llm(prompt, max_tokens=4000)
+        return {"final_report": report}
 
     prompt = f"""Write a formal literature-review-style research report in
 Markdown answering: {state['query']}

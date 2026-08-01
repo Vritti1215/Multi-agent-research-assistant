@@ -17,6 +17,7 @@ let state = {
     sessionId: null, report: null, papers: [], validatedClaims: [],
     contradictions: [], gaps: [], confidenceScore: 0, confidenceBreakdown: {},
     proposal: null, roadmap: null, experiment: null, domain: 'General',
+    critiqueVerdict: '', critiqueFeedback: '', revisionCount: 0,
     lastQuery: '', sortKey: null, sortAsc: true,
 };
 let selectedPapers = new Set();
@@ -106,6 +107,9 @@ async function runResearch() {
         state.confidenceScore = data.confidence_score || 0;
         state.confidenceBreakdown = data.confidence_breakdown || {};
         state.domain = data.domain || 'General';
+        state.critiqueVerdict = data.critique_verdict || '';
+        state.critiqueFeedback = data.critique_feedback || '';
+        state.revisionCount = data.revision_count || 0;
         state.lastQuery = query;
         renderResults();
         saveToHistory();
@@ -180,6 +184,7 @@ function renderResults() {
     state.sortKey = null;
     renderPapersTable();
     renderEvalDashboard();
+    renderCritiqueStatus();
 
     document.getElementById('kg-frame').style.display = 'none';
     document.getElementById('kg-empty').style.display = 'none';
@@ -454,6 +459,32 @@ function renderEvalDashboard() {
     `).join('') || '<div class="empty-state">No papers available.</div>';
 }
 
+/* ── SELF-CRITIQUE (REFLECTION LOOP) STATUS ──
+   Shows what the critique agent decided about the finished report,
+   compared against the ORIGINAL question — and whether it triggered a
+   revision. Makes the autonomous Plan→Write→Critique→Revise loop
+   visible instead of purely internal. */
+function renderCritiqueStatus() {
+    const el = document.getElementById('critique-status');
+    const verdict = state.critiqueVerdict;
+    const revisions = state.revisionCount || 0;
+
+    if (!verdict) {
+        el.textContent = 'No critique data for this run.';
+        return;
+    }
+
+    if (verdict === 'pass' && revisions === 0) {
+        el.textContent = 'The report passed self-critique on the first draft — it directly answered the original question with adequate grounding.';
+    } else if (revisions > 0) {
+        el.textContent = `The report was revised ${revisions} time(s) after self-critique found the writing didn't fully address the original question. Feedback used: "${state.critiqueFeedback || 'n/a'}"`;
+    } else if (verdict === 'research_gap') {
+        el.textContent = `Self-critique found the underlying evidence too thin to fully answer the question (retry budget reached). Feedback: "${state.critiqueFeedback || 'n/a'}"`;
+    } else {
+        el.textContent = 'The report passed self-critique.';
+    }
+}
+
 /* ── DOCUMENT EXPORTER ── */
 async function exportDoc(kind, fmt) {
     const text = kind === 'report' ? state.report : state.proposal;
@@ -636,6 +667,9 @@ async function loadSharedSessionIfPresent() {
         state.confidenceScore = data.confidence_score || 0;
         state.confidenceBreakdown = data.confidence_breakdown || {};
         state.domain = data.domain || 'General';
+        state.critiqueVerdict = data.critique_verdict || '';
+        state.critiqueFeedback = data.critique_feedback || '';
+        state.revisionCount = data.revision_count || 0;
         state.lastQuery = data.query;
         document.getElementById('query').value = data.query;
         renderResults();

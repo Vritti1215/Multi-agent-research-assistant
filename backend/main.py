@@ -62,6 +62,9 @@ def run_research(req: ResearchRequest):
             "confidence_score": final_state.get("confidence_score", 0),
             "confidence_breakdown": final_state.get("confidence_breakdown", {}),
             "validated_claims": final_state.get("validated_claims", []),
+            "critique_verdict": final_state.get("critique_verdict", ""),
+            "critique_feedback": final_state.get("critique_feedback", ""),
+            "revision_count": final_state.get("revision_iteration", 0),
         }
 
         return {
@@ -75,6 +78,9 @@ def run_research(req: ResearchRequest):
             "confidence_score": final_state.get("confidence_score", 0),
             "confidence_breakdown": final_state.get("confidence_breakdown", {}),
             "domain": final_state.get("domain", "General"),
+            "critique_verdict": final_state.get("critique_verdict", ""),
+            "critique_feedback": final_state.get("critique_feedback", ""),
+            "revision_count": final_state.get("revision_iteration", 0),
         }
     except HTTPException:
         raise
@@ -108,6 +114,9 @@ def get_session(session_id: str):
         "confidence_score": s.get("confidence_score", 0),
         "confidence_breakdown": s.get("confidence_breakdown", {}),
         "domain": s.get("domain", "General"),
+        "critique_verdict": s.get("critique_verdict", ""),
+        "critique_feedback": s.get("critique_feedback", ""),
+        "revision_count": s.get("revision_count", 0),
     }
 
 

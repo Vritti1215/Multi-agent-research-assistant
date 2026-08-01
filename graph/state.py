@@ -21,6 +21,7 @@ class Claim(BaseModel):
 class ResearchState(TypedDict):
     query: str
     deep_mode: bool
+    domain: str
     sub_questions: List[str]
     papers: List[dict]          # serialized Paper objects
     retrieved_chunks: List[dict]
@@ -35,3 +36,6 @@ class ResearchState(TypedDict):
     report_path: Optional[str]
     iteration: int               # for retry/loop tracking
     needs_more_search: bool
+    critique_verdict: str        # "pass" | "revise" | "research_gap"
+    critique_feedback: str
+    revision_iteration: int      # separate cap from search-retry iteration
